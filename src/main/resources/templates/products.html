@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Maersk Shop Online</title>
+<link rel="stylesheet" type="text/css" th:href="@{/style.css}" />
+<th:block th:include="/_header"></th:block>
+</head>
+<style>
+.box {
+	width: 230px;
+	height: 155px;
+	margin-bottom: 5px;
+}
+</style>
+<body>
+	<th:block th:include="/_menu"></th:block>
+	<div class="container">
+		<h2 style="font-weight: bold;">Products</h2>
+		<div class="row">
+			<div class="col-md-12 col-sm-12">
+				<div class="row">
+					<div th:each="prodInfo : ${productsList}">
+						<div class="">
+							<div class="display">
+								<img
+									th:src="@{/images/{productcode}.png(productcode=${prodInfo.productId})}"
+									alt="..."
+									style="width: 260px; height: 300px; margin-bottom: 5px; margin-right: 2px;" />
+								<div class="box">
+									<p style="font-size: 13px;">
+										<span th:utext="${prodInfo.productName}"></span><br> $<span
+											th:utext="${prodInfo.price}"></span>
+									</p>
+									<form th:action="@{/cart/add}">
+										<input type="hidden" th:name="productId" id="productId" th:value="${prodInfo.productId}" />
+									<button type="submit" name="submit" value="value"
+											class="link-button">Add To Cart</button>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+					<br />
+				</div>
+			</div>
+		</div>
+		<br> <br>
+
+	</div>
+	<!-- container end -->
+	<th:block th:include="/_footer"></th:block>
+</body>
+</html>

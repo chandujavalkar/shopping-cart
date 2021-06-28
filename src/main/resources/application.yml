@@ -1,0 +1,43 @@
+app:
+  products:
+    - productId: "4645"
+      productName: "Maersk"
+      quantity: 43
+      price: 345.00
+    - productId: "7684"
+      productName: "Christian Maersk Ship Postcard"
+      quantity: 33
+      price: 434.00
+    - productId: "5454"
+      productName: "CIMC Container - Assembled -- Maersk (silver, blue, black)"
+      quantity: 33
+      price: 533.00
+    - productId: "0293"
+      productName: "Container Maersk by Walthers"
+      quantity: 3
+      price: 927.00
+    - productId: "8970"
+      productName: "Container Maersk Sealand"
+      quantity: 92
+      price: 92.00
+    - productId: "7284"
+      productName: "Freightliner New Cascadia"
+      quantity: 43
+      price: 434.00
+    - productId: "4422"
+      productName: "Captain Phillips Mask"
+      quantity: 43
+      price: 345.00
+    - productId: "5344"
+      productName: "Tamiya Mask"
+      quantity: 33
+      price: 624.00
+    - productId: "4634"
+      productName: "LEGO Creator Set #10241 Maersk Line Triple-E"
+      quantity: 4
+      price: 35.00
+    - productId: "6767"
+      productName: "LEGO Creator Maersk Train"
+      quantity: 3
+      price: 44.00
+    

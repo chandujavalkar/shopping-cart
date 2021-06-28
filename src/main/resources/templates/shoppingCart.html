@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Maersk Shop Online</title>
+<link rel="stylesheet" type="text/css" th:href="@{/style.css}" />
+<th:block th:include="/_header"></th:block>
+</head>
+<body>
+
+	<th:block th:include="/_menu"></th:block>
+
+
+	<th:block
+		th:if="${cartData == null || cartData.cartItems == null || cartData.cartItems.empty}">
+		<h2>There are no items in Cart</h2>
+		<a th:href="@{/products}">Products</a>
+	</th:block>
+
+	<div class="container cart_bag">
+		<h2 style="font-weight: bold;">YOUR BAG</h2>
+		<div class="row">
+			<div class="col-lg-8 col-sm-8 col-xs-12">
+				<table class="table">
+
+					<th:block
+						th:if="${cartData != null && cartData.cartItems != null && !cartData.cartItems.empty}">
+						<form method="POST" th:object="${cartData}"
+							th:action="@{/shoppingCart}">
+
+							<div class="product-preview-container"
+								th:each="cartLineInfo, varStatus : ${cartData.cartItems}">
+								<tr>
+									<td><img
+										th:src="@{/images/{productcode}.png(productcode=${cartLineInfo.productId})}"
+										width="190px"></td>
+									<td><b
+										style="color: #000; font-size: 16px; font-weight: 600"
+										th:utext="${cartLineInfo.productName}"></b>
+										<p style="font-size: 14px;">
+											Product Description<br> PRICE: <span
+												th:utext="${cartLineInfo.price}"></span>
+										</p>
+										<form th:action="@{/cart/remove}">
+											<input type="hidden" th:name="productId" id="productId"
+												th:value="${cartLineInfo.productId}" /> <input
+												type="hidden" th:name="productId" id="userId"
+												th:value="${cartLineInfo.productId}" />
+											<button type="submit" name="submit" value="value"
+												class="link-button">Remove</button>
+										</form></td>
+									<td><input type="text"
+										th:name="|cartLineInfo[${varStatus.index}].quantity|"
+										th:value="${cartLineInfo.quantity}" class="form-control"
+										style="width: 50px; height: 35px;"></td>
+									<td>$<span th:utext="${cartLineInfo.price}"></span></td>
+								</tr>
+							</div>
+
+							<tr>
+								<td colspan="7" align="right"><input class="btn btn-dark"
+									type="submit" value="Update Quantity" /> <a
+									th:href="@{/products}" style="margin-left: 20px;">Continue
+										Shopping</a> <!--  <a th:href="@{/shoppingCartCustomer}">Checkout</a> -->
+
+								</td>
+								<td></td>
+								<td></td>
+							</tr>
+
+
+						</form>
+					</th:block>
+				</table>
+
+			</div>
+		</div>
+		<th:block th:include="/_footer"></th:block>
+</body>
+</html>
