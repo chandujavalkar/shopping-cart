@@ -1,0 +1,80 @@
+import org.w3c.dom.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
+import java.util.*;
+
+public class SpringXmlDependencyParser {
+
+    public static void main(String[] args) {
+        String configPath = "WEB-INF"; // Path where XMLs exist
+
+        // Step 1: Parse all XML files
+        Map<String, Map<String, Object>> beanDetails = parseXmlFiles(configPath);
+
+        // Step 2: Convert to JSON format (printing for now)
+        System.out.println("Final Bean Dependency JSON:");
+        System.out.println(beanDetails);
+    }
+
+    private static Map<String, Map<String, Object>> parseXmlFiles(String folderPath) {
+        Map<String, Map<String, Object>> beansMap = new HashMap<>();
+        File folder = new File(folderPath);
+
+        if (!folder.exists() || !folder.isDirectory()) {
+            System.err.println("Invalid folder path: " + folderPath);
+            return beansMap;
+        }
+
+        for (File file : Objects.requireNonNull(folder.listFiles())) {
+            if (file.getName().endsWith(".xml")) {
+                parseXmlFile(file, beansMap);
+            }
+        }
+
+        return beansMap;
+    }
+
+    private static void parseXmlFile(File file, Map<String, Map<String, Object>> beansMap) {
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.parse(file);
+            doc.getDocumentElement().normalize();
+
+            NodeList beanNodes = doc.getElementsByTagName("bean");
+
+            for (int i = 0; i < beanNodes.getLength(); i++) {
+                Element beanElement = (Element) beanNodes.item(i);
+                String beanId = beanElement.getAttribute("id");
+                String beanClass = beanElement.getAttribute("class");
+
+                Map<String, Object> beanInfo = new HashMap<>();
+                beanInfo.put("class", beanClass);
+                beanInfo.put("dependencies", new ArrayList<String>());
+                beanInfo.put("properties", new HashMap<String, String>());
+
+                // Extract property values and dependencies
+                NodeList propertyNodes = beanElement.getElementsByTagName("property");
+                for (int j = 0; j < propertyNodes.getLength(); j++) {
+                    Element propElement = (Element) propertyNodes.item(j);
+                    String propName = propElement.getAttribute("name");
+                    String propValue = propElement.getAttribute("value");
+                    String refBean = propElement.getAttribute("ref");
+
+                    if (!propValue.isEmpty()) {
+                        ((Map<String, String>) beanInfo.get("properties")).put(propName, propValue);
+                    }
+
+                    if (!refBean.isEmpty()) {
+                        ((List<String>) beanInfo.get("dependencies")).add(refBean);
+                    }
+                }
+
+                beansMap.put(beanId, beanInfo);
+            }
+        } catch (Exception e) {
+            System.err.println("Error parsing XML file: " + file.getName() + " - " + e.getMessage());
+        }
+    }
+}
